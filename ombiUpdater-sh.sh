@@ -1,6 +1,7 @@
 #!/bin/sh
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
+#ombiUpdater-sh - v1.01 - https://github.com/BrianDMG/ombiUpdater-sh
 #This script will update your Ombi install to the latest version from GitHub
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -9,11 +10,18 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 	OMBIDIR=/usr/local/share/ombi
 	#Backup directory
 	BACKUPDIR=/usr/local/share/ombi_bk
+	#OmbiIP (IP or hostname)
+	OMBIHOST=
+	OMBIAPIKEY='ombiapikey'
 #SSMTP variables
 	#To address
+	TO="example@example.com"
 	#From adderess
+	FROM="example@example.com"
 	#Subject
+	SUBJECT="Ombi updated"
 	#Body
+	BODY="<html><head><meta charset="UTF-8" /></head><body>The Ombi server has been updated to <strong>v$LOCALVER</strong>.<br><a href=https://github.com/tidusjar/Ombi/releases/tag/v$LOCALVER target=_blank>Release notes</a></body></html>"
 #-----------------------------------------------------------------------------------------------------------------------------------------------
 
 #Get Ombi version with cURL, save to file ./ombiver
@@ -51,7 +59,7 @@ REMOTEVERCOMP=$(curl -s https://api.github.com/repos/tidusjar/Ombi/releases/late
 	rm -rf /tmp/Release
 	
 	#Start Ombi and nginx
-	/usr/local/bin/screen -d -m -S root nohup /usr/local/bin/mono /usr/local/share/ombi/Ombi.exe
+	/usr/local/bin/screen -d -m -S root nohup /usr/local/bin/mono $OMBIDIR/Ombi.exe
 	service nginx start
 
 	#Use sendmail/ssmtp to send email to post to Wordpress
